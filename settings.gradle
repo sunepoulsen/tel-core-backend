@@ -1,2 +1,5 @@
 rootProject.name = 'tel-core-backend'
 
+include 'tel-service-core'
+include 'tel-client-core'
+

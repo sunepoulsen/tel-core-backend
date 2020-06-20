@@ -1,0 +1,31 @@
+plugins {
+    id 'java-library'
+}
+
+dependencies {
+    api project(':tel-client-core')
+
+    // Spring Boot
+    api "org.springframework.boot:spring-boot:${project.property('spring-boot.version')}"
+
+    // Spring Framework
+    api "org.springframework:spring-context:${project.property('spring-framework.version')}"
+    api "org.springframework:spring-webmvc:${project.property('spring-framework.version')}"
+
+    // Tomcat Core
+    api "org.apache.tomcat.embed:tomcat-embed-core:${project.property('tomcat-embed-core.version')}"
+
+    // Swagger
+    api "io.springfox:springfox-swagger2:${project.property('swagger.version')}"
+    api "io.springfox:springfox-swagger-ui:${project.property('swagger.version')}"
+
+    // Logging
+    api "ch.qos.logback:logback-classic:${project.property('logback.version')}"
+    api "org.slf4j:log4j-over-slf4j:${project.property('log4j-over-slf4j.version')}"
+
+    // Hibernate Validation
+    api "org.hibernate.validator:hibernate-validator:${project.property('hibernate-validator.version')}"
+
+    // Performance
+    implementation "org.perf4j:perf4j:${project.property('perf4j.version')}"
+}

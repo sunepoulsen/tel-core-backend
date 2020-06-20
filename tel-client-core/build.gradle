@@ -1,0 +1,11 @@
+plugins {
+    id 'java-library'
+}
+
+dependencies {
+    // Jackson Json
+    api "com.fasterxml.jackson.core:jackson-databind:${project.property('jackson.version')}"
+
+    // Rx Java2
+    api "io.reactivex.rxjava2:rxjava:${project.property('rxjava2.version')}"
+}
