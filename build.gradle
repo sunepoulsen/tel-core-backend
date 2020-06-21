@@ -1,10 +1,19 @@
 subprojects {
     apply plugin: 'java'
     apply plugin: 'groovy'
+    apply plugin: 'maven-publish'
 
     repositories {
         mavenLocal()
         mavenCentral()
+    }
+
+    publishing {
+        publications {
+            maven(MavenPublication) {
+                from components.java
+            }
+        }
     }
 
     group 'dk.sunepoulsen.tech-enterprise-labs'
