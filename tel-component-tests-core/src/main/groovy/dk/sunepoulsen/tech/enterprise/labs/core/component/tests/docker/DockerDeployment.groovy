@@ -41,6 +41,11 @@ class DockerDeployment {
         return new TechEnterpriseLabsClient(URI.create("http://localhost:${port}"))
     }
 
+    URI httpUriForContainer(String containerName) {
+        String port = DockerIntegrator.findExternalPort("${composeName}_${containerName}_1", DockerIntegrator.PRIVATE_SERVICE_PORT)
+        return new URI("http://localhost:${port}")
+    }
+
     boolean waitForAvailable() {
         this.telServices.each { containerName ->
             if( !waitForAvailable(containerName) ) {
