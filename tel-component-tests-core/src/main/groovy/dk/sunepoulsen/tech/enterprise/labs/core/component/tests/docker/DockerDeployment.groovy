@@ -3,14 +3,14 @@ package dk.sunepoulsen.tech.enterprise.labs.core.component.tests.docker
 import dk.sunepoulsen.tech.enterprise.labs.core.component.tests.util.ProcessUtils
 import dk.sunepoulsen.tech.enterprise.labs.core.rs.client.TechEnterpriseLabsClient
 import dk.sunepoulsen.tech.enterprise.labs.core.rs.client.TechEnterpriseLabsIntegrator
-import dk.sunepoulsen.tech.enterprise.labs.core.rs.client.model.monitoring.ServiceStatus
-import dk.sunepoulsen.tech.enterprise.labs.core.rs.client.model.monitoring.ServiceStatusCode
+import dk.sunepoulsen.tech.enterprise.labs.core.rs.client.model.monitoring.ServiceHealth
+import dk.sunepoulsen.tech.enterprise.labs.core.rs.client.model.monitoring.ServiceHealthStatusCode
 import groovy.util.logging.Slf4j
 
 @Slf4j
 class DockerDeployment {
 
-    static final Long DEFAULT_TIMEOUT = 60000L
+    static final Long DEFAULT_TIMEOUT = 7000L
     static final Long DEFAULT_SLEEP = 500L
 
     private String composeName
@@ -46,22 +46,18 @@ class DockerDeployment {
         return new URI("http://localhost:${port}")
     }
 
-    boolean waitForAvailable() {
+    void waitForAvailable() {
         this.telServices.each { containerName ->
-            if( !waitForAvailable(containerName) ) {
-                return false
-            }
+            waitForAvailable(containerName)
         }
-
-        return true
     }
 
-    boolean waitForAvailable(String containerName) {
+    void waitForAvailable(String containerName) {
         TechEnterpriseLabsIntegrator integrator = new TechEnterpriseLabsIntegrator(createClient(containerName))
-        return waitForService(integrator)
+        waitForService(integrator)
     }
 
-    static boolean waitForService( TechEnterpriseLabsIntegrator integrator ) {
+    static void waitForService( TechEnterpriseLabsIntegrator integrator ) {
         long start = System.currentTimeMillis()
 
         while( ( System.currentTimeMillis() - start ) < DEFAULT_TIMEOUT ) {
@@ -70,8 +66,7 @@ class DockerDeployment {
                 if( isAvailable(integrator) ) {
                     long spent = System.currentTimeMillis() - start
                     log.debug( "Service available after {}ms", spent )
-
-                    return true
+                    return
                 }
             }
             catch( Exception ex ) {
@@ -86,13 +81,13 @@ class DockerDeployment {
             }
         }
 
-        return false
+        throw new ServiceNotAvailableException("The service is not available after ${DEFAULT_TIMEOUT} ms")
     }
 
     static boolean isAvailable(TechEnterpriseLabsIntegrator integrator) {
-        ServiceStatus serviceStatus = integrator.status().blockingGet()
+        ServiceHealth serviceStatus = integrator.health().blockingGet()
         if( serviceStatus != null ) {
-            return serviceStatus.getStatus().equals( ServiceStatusCode.OK )
+            return serviceStatus.getStatus() == ServiceHealthStatusCode.UP
         }
 
         return false

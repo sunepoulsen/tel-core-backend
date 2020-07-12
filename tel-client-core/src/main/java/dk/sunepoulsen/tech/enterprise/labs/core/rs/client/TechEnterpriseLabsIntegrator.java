@@ -1,6 +1,6 @@
 package dk.sunepoulsen.tech.enterprise.labs.core.rs.client;
 
-import dk.sunepoulsen.tech.enterprise.labs.core.rs.client.model.monitoring.ServiceStatus;
+import dk.sunepoulsen.tech.enterprise.labs.core.rs.client.model.monitoring.ServiceHealth;
 import io.reactivex.Single;
 
 public class TechEnterpriseLabsIntegrator extends AbstractIntegrator {
@@ -8,8 +8,8 @@ public class TechEnterpriseLabsIntegrator extends AbstractIntegrator {
         super(httpClient);
     }
 
-    public Single<ServiceStatus> status() {
-        return Single.fromFuture(httpClient.get("/mx/status", ServiceStatus.class))
+    public Single<ServiceHealth> health() {
+        return Single.fromFuture(httpClient.get("/actuator/health", ServiceHealth.class))
                 .onErrorResumeNext(this::mapClientExceptions);
     }
 
