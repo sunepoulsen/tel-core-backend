@@ -27,6 +27,7 @@ class DockerDeployment {
         log.info( 'Starting deployment in {}', composeDirectory )
 
         ProcessUtils.execute('docker-compose up -d', composeDirectory)
+        ProcessUtils.execute('docker-compose ps', composeDirectory)
     }
 
     void undeploy() {
