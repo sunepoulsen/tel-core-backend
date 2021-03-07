@@ -1,24 +1,16 @@
 pipeline {
     agent {
         docker {
-            image 'openjdk:15'
+            image 'localhost:21903/cibar-jdk:14'
         }
     }
 
     stages {
-        stage('Hello') {
-            steps {
-                echo 'Hello World'
-            }
-        }
-        stage('Content') {
-            steps {
-                sh 'ls -l'
-            }
-        }
-        stage('Versions') {
+        stage('Tools') {
             steps {
                 sh 'java -version'
+                sh 'docker --version'
+                sh 'ls -l'
             }
         }
     }
