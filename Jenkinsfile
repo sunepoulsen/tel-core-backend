@@ -1,7 +1,7 @@
 pipeline {
     agent {
         docker {
-            image 'cibar-nexus:9202/cibar-jdk:14'
+            image 'cibar-nexus:21912/cibar-jdk:14'
         }
     }
 
