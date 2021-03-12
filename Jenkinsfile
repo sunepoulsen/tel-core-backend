@@ -1,7 +1,10 @@
 pipeline {
     agent {
         docker {
-            image 'cibar-jdk:14'
+            image 'cibar-nexus:9202/cibar-jdk:14'
+            registryUrl 'https://cibar-nexus:9202'
+            registryCredentialsId 'ciber-nexus-credentials-id'
+            args '-v /var/jenkins_home/.m2:/root/.m2'
         }
     }
 
