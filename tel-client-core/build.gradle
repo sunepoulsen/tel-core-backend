@@ -5,7 +5,14 @@ plugins {
 dependencies {
     // Jackson Json
     api "com.fasterxml.jackson.core:jackson-databind:${project.property('jackson.version')}"
+    api "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${project.property('jackson.version')}"
 
     // Rx Java2
     api "io.reactivex.rxjava2:rxjava:${project.property('rxjava2.version')}"
+
+    // Hibernate Validation
+    api "org.hibernate.validator:hibernate-validator:${project.property('hibernate-validator.version')}"
+
+    // Swagger
+    api "io.springfox:springfox-swagger2:${project.property('swagger.version')}"
 }
