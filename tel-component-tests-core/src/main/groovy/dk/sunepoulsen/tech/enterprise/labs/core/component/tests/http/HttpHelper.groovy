@@ -1,13 +1,17 @@
 package dk.sunepoulsen.tech.enterprise.labs.core.component.tests.http
 
+import com.google.common.net.MediaType
 import dk.sunepoulsen.tech.enterprise.labs.core.component.tests.docker.DockerDeployment
 import dk.sunepoulsen.tech.enterprise.labs.core.component.tests.verification.HttpResponseVerificator
+import dk.sunepoulsen.tech.enterprise.labs.core.rs.client.utils.JsonUtils
+import groovy.util.logging.Slf4j
 
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 import java.time.Duration
 
+@Slf4j
 class HttpHelper {
 
     private DockerDeployment deployment
@@ -39,7 +43,37 @@ class HttpHelper {
     }
 
     HttpResponseVerificator sendRequest(HttpRequest httpRequest) {
+        Optional<String> requestId = httpRequest.headers().firstValue('X-Request-ID')
+        if( requestId.empty ) {
+            log.info("Sending request ${httpRequest.method()} ${httpRequest.uri().toString()} with no X-Request-ID")
+        }
+        else {
+            log.info("Sending request ${httpRequest.method()} ${httpRequest.uri().toString()} with X-Request-ID: ${requestId.get()}")
+        }
+
         return new HttpResponseVerificator(httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString()))
     }
 
+    HttpResponseVerificator createAndSendGet(String containerName, String url) {
+        HttpRequest.Builder requestBuilder = newRequestBuilder(containerName, url)
+            .GET()
+
+        return sendRequest(requestBuilder.build())
+    }
+
+    HttpResponseVerificator createAndSendPostWithBody(String containerName, String url, String contentType, HttpRequest.BodyPublisher bodyPublisher) {
+        HttpRequest.Builder requestBuilder = newRequestBuilder(containerName, url)
+            .POST(bodyPublisher)
+            .header('Content-Type', contentType)
+
+        return sendRequest(requestBuilder.build())
+    }
+
+    HttpResponseVerificator createAndSendPostWithJson(String containerName, String url, Object body) {
+        return createAndSendPostWithBody(containerName,
+            url,
+            MediaType.JSON_UTF_8.toString(),
+            HttpRequest.BodyPublishers.ofString(JsonUtils.encodeAsJson(body))
+        )
+    }
 }

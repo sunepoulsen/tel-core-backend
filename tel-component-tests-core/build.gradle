@@ -8,6 +8,9 @@ dependencies {
 
     implementation localGroovy() // Note: using the groovy implementation shipped with gradle
 
+    // Database
+    implementation "org.postgresql:postgresql:${project.property('jdbc-postgresql-driver.version')}"
+
     // Spock
     implementation "org.spockframework:spock-core:${project.property('spock-core.version')}"
     implementation "cglib:cglib-nodep:${project.property('cglib-nodep.version')}"
