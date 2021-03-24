@@ -1,5 +1,6 @@
 package dk.sunepoulsen.tech.enterprise.labs.core.rs.client.utils
 
+import com.fasterxml.jackson.annotation.JsonFormat
 import dk.sunepoulsen.tech.enterprise.labs.core.rs.client.model.BaseModel
 
 import java.time.LocalDate

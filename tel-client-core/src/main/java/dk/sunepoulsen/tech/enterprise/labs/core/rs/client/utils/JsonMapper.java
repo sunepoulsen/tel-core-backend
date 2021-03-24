@@ -4,14 +4,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
-public class JsonUtils {
+public class JsonMapper {
     private final ObjectMapper objectMapper;
 
-    public JsonUtils() {
-        this(defaultObjectMapper());
+    public JsonMapper() {
+        this(springBootObjectMapper());
     }
 
-    public JsonUtils(ObjectMapper objectMapper) {
+    public JsonMapper(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
 
@@ -24,14 +24,14 @@ public class JsonUtils {
     }
 
     public static String encodeAsJson(Object value) throws JsonProcessingException {
-        return new JsonUtils().encode(value);
+        return new JsonMapper().encode(value);
     }
 
     public static <T> T decodeJson(String json, Class<T> clazz) throws JsonProcessingException {
-        return new JsonUtils().decode(json, clazz);
+        return new JsonMapper().decode(json, clazz);
     }
 
-    private static ObjectMapper defaultObjectMapper() {
+    public static ObjectMapper springBootObjectMapper() {
         ObjectMapper objectMapper = new ObjectMapper().findAndRegisterModules();
         objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 

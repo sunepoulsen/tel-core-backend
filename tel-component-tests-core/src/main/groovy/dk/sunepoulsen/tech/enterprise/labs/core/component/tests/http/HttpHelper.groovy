@@ -3,7 +3,7 @@ package dk.sunepoulsen.tech.enterprise.labs.core.component.tests.http
 import com.google.common.net.MediaType
 import dk.sunepoulsen.tech.enterprise.labs.core.component.tests.docker.DockerDeployment
 import dk.sunepoulsen.tech.enterprise.labs.core.component.tests.verification.HttpResponseVerificator
-import dk.sunepoulsen.tech.enterprise.labs.core.rs.client.utils.JsonUtils
+import dk.sunepoulsen.tech.enterprise.labs.core.rs.client.utils.JsonMapper
 import groovy.util.logging.Slf4j
 
 import java.net.http.HttpClient
@@ -73,7 +73,7 @@ class HttpHelper {
         return createAndSendPostWithBody(containerName,
             url,
             MediaType.JSON_UTF_8.toString(),
-            HttpRequest.BodyPublishers.ofString(JsonUtils.encodeAsJson(body))
+            HttpRequest.BodyPublishers.ofString(JsonMapper.encodeAsJson(body))
         )
     }
 }

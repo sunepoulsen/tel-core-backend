@@ -1,6 +1,6 @@
 package dk.sunepoulsen.tech.enterprise.labs.core.component.tests.verification
 
-import dk.sunepoulsen.tech.enterprise.labs.core.rs.client.utils.JsonUtils
+import dk.sunepoulsen.tech.enterprise.labs.core.rs.client.utils.JsonMapper
 import groovy.json.JsonSlurper
 
 import java.net.http.HttpResponse
@@ -35,11 +35,15 @@ class HttpResponseVerificator {
         assert bodyAsJson() != null
     }
 
+    String bodyAsText() {
+        return httpResponse.body()
+    }
+
     def bodyAsJson() {
         return new JsonSlurper().parse(httpResponse.body().getBytes('UTF-8'))
     }
 
     def <T> T bodyAsJsonOfType(Class<T> clazz) {
-        return JsonUtils.decodeJson(httpResponse.body(), clazz)
+        return JsonMapper.decodeJson(httpResponse.body(), clazz)
     }
 }

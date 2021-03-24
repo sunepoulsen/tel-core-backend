@@ -3,6 +3,9 @@ plugins {
 }
 
 dependencies {
+    // Spring Boot
+    api "org.springframework.data:spring-data-commons:${project.property('spring-boot.version')}"
+
     // Jackson Json
     api "com.fasterxml.jackson.core:jackson-databind:${project.property('jackson.version')}"
     api "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${project.property('jackson.version')}"
