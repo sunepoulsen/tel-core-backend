@@ -76,4 +76,20 @@ class HttpHelper {
             HttpRequest.BodyPublishers.ofString(JsonMapper.encodeAsJson(body))
         )
     }
+
+    HttpResponseVerificator createAndSendPatchWithBody(String containerName, String url, String contentType, HttpRequest.BodyPublisher bodyPublisher) {
+        HttpRequest.Builder requestBuilder = newRequestBuilder(containerName, url)
+            .method("PATCH", bodyPublisher)
+            .header('Content-Type', contentType)
+
+        return sendRequest(requestBuilder.build())
+    }
+
+    HttpResponseVerificator createAndSendPatchWithJson(String containerName, String url, Object body) {
+        return createAndSendPatchWithBody(containerName,
+            url,
+            MediaType.JSON_UTF_8.toString(),
+            HttpRequest.BodyPublishers.ofString(JsonMapper.encodeAsJson(body))
+        )
+    }
 }
