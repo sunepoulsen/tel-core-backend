@@ -14,6 +14,15 @@ import java.time.Duration
 @Slf4j
 class HttpHelper {
 
+    static final String POST = 'POST'
+    static final String GET = 'GET'
+    static final String PUT = 'PUT'
+    static final String PATCH = 'PATCH'
+    static final String DELETE = 'DELETE'
+    static final String HEAD = 'HEAD'
+    static final String OPTIONS = 'OPTIONS'
+
+
     private DockerDeployment deployment
     protected HttpClient httpClient
 
@@ -54,39 +63,24 @@ class HttpHelper {
         return new HttpResponseVerificator(httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString()))
     }
 
-    HttpResponseVerificator createAndSendGet(String containerName, String url) {
+    HttpResponseVerificator sendValidRequest(String containerName, String method, String url) {
         HttpRequest.Builder requestBuilder = newRequestBuilder(containerName, url)
-            .GET()
+            .method(method, HttpRequest.BodyPublishers.noBody())
 
         return sendRequest(requestBuilder.build())
     }
 
-    HttpResponseVerificator createAndSendPostWithBody(String containerName, String url, String contentType, HttpRequest.BodyPublisher bodyPublisher) {
+    HttpResponseVerificator sendValidRequest(String containerName, String method, String url, String contentType, HttpRequest.BodyPublisher bodyPublisher) {
         HttpRequest.Builder requestBuilder = newRequestBuilder(containerName, url)
-            .POST(bodyPublisher)
+            .method(method, bodyPublisher)
             .header('Content-Type', contentType)
 
         return sendRequest(requestBuilder.build())
     }
 
-    HttpResponseVerificator createAndSendPostWithJson(String containerName, String url, Object body) {
-        return createAndSendPostWithBody(containerName,
-            url,
-            MediaType.JSON_UTF_8.toString(),
-            HttpRequest.BodyPublishers.ofString(JsonMapper.encodeAsJson(body))
-        )
-    }
-
-    HttpResponseVerificator createAndSendPatchWithBody(String containerName, String url, String contentType, HttpRequest.BodyPublisher bodyPublisher) {
-        HttpRequest.Builder requestBuilder = newRequestBuilder(containerName, url)
-            .method("PATCH", bodyPublisher)
-            .header('Content-Type', contentType)
-
-        return sendRequest(requestBuilder.build())
-    }
-
-    HttpResponseVerificator createAndSendPatchWithJson(String containerName, String url, Object body) {
-        return createAndSendPatchWithBody(containerName,
+    HttpResponseVerificator sendValidRequest(String containerName, String method, String url, Object body) {
+        return sendValidRequest(containerName,
+            method,
             url,
             MediaType.JSON_UTF_8.toString(),
             HttpRequest.BodyPublishers.ofString(JsonMapper.encodeAsJson(body))
