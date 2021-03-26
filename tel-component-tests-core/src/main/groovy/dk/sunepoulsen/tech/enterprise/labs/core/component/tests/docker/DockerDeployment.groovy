@@ -33,6 +33,20 @@ class DockerDeployment {
     void undeploy() {
         log.info( 'Stopping deployment in {}', composeDirectory )
 
+        File serviceLogDir = new File('build/logs')
+        if(!serviceLogDir.exists()) {
+            log.info("Creating directory ${serviceLogDir.path}")
+            new File('build/logs').mkdirs()
+        }
+
+        this.telServices.each {
+            String srcFilename = "${composeName}_${it}_1:/app/logs/service.log"
+            String destFilename = "build/logs/${it}.log"
+
+            log.info("Copying ${srcFilename} to ${destFilename}")
+            ProcessUtils.execute( "docker cp ${srcFilename} ${destFilename}", new File('.'))
+        }
+
         ProcessUtils.execute('docker-compose stop', composeDirectory)
         ProcessUtils.execute('docker-compose rm -f', composeDirectory)
     }
